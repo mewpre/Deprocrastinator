@@ -12,6 +12,8 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *taskTextField;
 @property NSMutableArray *taskList;
+@property BOOL editModeStatus;
+@property (strong, nonatomic) IBOutlet UIButton *addButton;
 
 @end
 
@@ -20,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.taskList = [NSMutableArray arrayWithObjects:@"Task1", @"Task2", @"Task3", @"Task4", nil];
+    self.editModeStatus = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -42,9 +45,38 @@
     [self.tableView reloadData];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (self.editModeStatus)
+    {
+        [self.taskList removeObjectAtIndex:indexPath.row];
+        [self.tableView reloadData];
+    }
+
+    else
+    {
+        cell.textLabel.textColor = [UIColor greenColor];
+    }
+}
+
+- (IBAction)onEditButtonPressed:(UIBarButtonItem *)sender
+{
+    //if not in edit mode, go into edit mode
+    if (!self.editModeStatus)
+    {
+        [self.tableView setEditing:YES animated:YES];
+        sender.title = @"Done";
+        self.addButton.enabled = NO;
+    }
+    else
+    {
+        [self.tableView setEditing:NO animated:YES];
+        sender.title = @"Edit";
+        self.addButton.enabled = YES;
+    }
+    self.editModeStatus = !self.editModeStatus;
+
 }
 
 @end
