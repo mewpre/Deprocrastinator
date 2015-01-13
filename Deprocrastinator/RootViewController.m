@@ -45,6 +45,62 @@
     [self.tableView reloadData];
 }
 
+- (IBAction)onSwipeRight:(UISwipeGestureRecognizer *)gesture
+{
+    CGPoint touchPoint;
+    NSIndexPath *indexPath;
+    UITableViewCell *cell;
+    touchPoint  = [gesture locationInView:self.tableView];
+    indexPath = [self.tableView indexPathForRowAtPoint:touchPoint];
+    cell = [self.tableView cellForRowAtIndexPath:indexPath];
+
+    if (cell.textLabel.textColor == [UIColor blackColor]) {
+        cell.textLabel.textColor = [UIColor redColor];
+    }
+    else if (cell.textLabel.textColor == [UIColor redColor])
+    {
+        cell.textLabel.textColor = [UIColor yellowColor];
+    }
+    else if (cell.textLabel.textColor == [UIColor yellowColor])
+    {
+        cell.textLabel.textColor = [UIColor greenColor];
+    }
+    else
+    {
+        cell.textLabel.textColor = [UIColor blackColor];
+    }
+}
+
+/*************************/
+// Use this method if you want to change the buttons in edit mode in any way (add more, change title, etc.)
+//-(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Title" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+//        [self.taskList removeObjectAtIndex:indexPath.row];
+//        [self.tableView reloadData];
+//    }];
+//
+//    return @[deleteAction];
+//}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.taskList removeObjectAtIndex:indexPath.row];
+        [self.tableView reloadData];
+        [self.tableView endUpdates];
+
+    }
+}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -56,7 +112,10 @@
 
     else
     {
-        cell.textLabel.textColor = [UIColor greenColor];
+        NSDictionary *attribute = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]
+                                    };
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:cell.textLabel.text attributes:attribute];
+        cell.textLabel.attributedText = attributedString;
     }
 }
 
