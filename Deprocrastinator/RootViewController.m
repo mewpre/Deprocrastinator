@@ -32,17 +32,7 @@
     self.normalText= @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleNone]};
     self.strikethroughText = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]};
 
-    NSMutableAttributedString *task1 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
-    TaskDetails *taskDetails = [[TaskDetails alloc] initWithProperties:task1 textColor:[UIColor blackColor] isStrikethrough:NO];
-    self.taskList = [[NSMutableArray alloc]initWithObjects:taskDetails, nil];
-
-    for (int i = 0; i<50; i++)
-    {
-        NSMutableAttributedString *test = [[NSMutableAttributedString alloc] initWithString:@"test" attributes:self.normalText];
-        TaskDetails *testDetails = [[TaskDetails alloc] initWithProperties:test textColor:[UIColor blackColor] isStrikethrough:NO];
-        [self.taskList addObject:testDetails];
-    }
-
+    [self initializeStartingTaskList];
     self.editModeStatus = NO;
     self.taskTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
 }
@@ -202,6 +192,21 @@
         [self.tableView reloadData];
         [self.tableView endUpdates];
     }
+}
+
+#pragma mark - Initialize Task List
+
+- (void)initializeStartingTaskList
+{
+    NSMutableAttributedString *task1 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    TaskDetails *task1Details = [[TaskDetails alloc] initWithProperties:task1 textColor:[UIColor blackColor] isStrikethrough:NO];
+    NSMutableAttributedString *task2 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    TaskDetails *task2Details = [[TaskDetails alloc] initWithProperties:task2 textColor:[UIColor blackColor] isStrikethrough:NO];
+    NSMutableAttributedString *task3 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    TaskDetails *task3Details = [[TaskDetails alloc] initWithProperties:task3 textColor:[UIColor blackColor] isStrikethrough:NO];
+    NSMutableAttributedString *task4 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    TaskDetails *task4Details = [[TaskDetails alloc] initWithProperties:task4 textColor:[UIColor blackColor] isStrikethrough:NO];
+    self.taskList = [[NSMutableArray alloc]initWithObjects:task1Details, task2Details, task3Details, task4Details, nil];
 }
 
 @end
