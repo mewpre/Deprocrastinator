@@ -123,8 +123,6 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        //add code here for when you hit delete
-
         UIAlertView *deleteWarning = [[UIAlertView alloc] initWithTitle:@"Delete Warning:" message:@"Do you really want to delete this task?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
         // optional - add more buttons:
         [deleteWarning addButtonWithTitle:@"Delete"];
