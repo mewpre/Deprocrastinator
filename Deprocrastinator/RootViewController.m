@@ -7,6 +7,7 @@
 //
 
 #import "RootViewController.h"
+#import "TaskDetails.h"
 
 @interface RootViewController () <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -16,18 +17,33 @@
 @property NSMutableArray *taskList;
 @property NSIndexPath *deleteCellIndexPath;
 
-@property BOOL isStrikethrough;
 @property BOOL editModeStatus;
+
+@property NSDictionary *normalText;
+@property NSDictionary *strikethroughText;
 
 @end
 
 @implementation RootViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    self.taskList = [NSMutableArray arrayWithObjects:@"Task1", @"Task2", @"Task3", @"Task4", nil];
+    self.normalText= @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleNone]};
+    self.strikethroughText = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]};
+
+    NSMutableAttributedString *task1 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    TaskDetails *taskDetails = [[TaskDetails alloc] initWithProperties:task1 textColor:[UIColor blackColor] isStrikethrough:NO];
+    self.taskList = [[NSMutableArray alloc]initWithObjects:taskDetails, nil];
+
+    for (int i = 0; i<50; i++)
+    {
+        NSMutableAttributedString *test = [[NSMutableAttributedString alloc] initWithString:@"test" attributes:self.normalText];
+        TaskDetails *testDetails = [[TaskDetails alloc] initWithProperties:test textColor:[UIColor blackColor] isStrikethrough:NO];
+        [self.taskList addObject:testDetails];
+    }
+
     self.editModeStatus = NO;
-    self.isStrikethrough = NO;
     self.taskTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
 }
 
@@ -37,7 +53,9 @@
 {
     if (![self.taskTextField.text isEqualToString:@""])
     {
-        [self.taskList addObject:self.taskTextField.text];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithString:self.taskTextField.text attributes:self.normalText];
+        TaskDetails *newTaskDetails = [[TaskDetails alloc]initWithProperties:attributedString textColor:[UIColor blackColor] isStrikethrough:NO];
+        [self.taskList addObject:newTaskDetails];
         [self.taskTextField resignFirstResponder];
         self.taskTextField.text = @"";
         [self.tableView reloadData];
@@ -67,23 +85,24 @@
 {
     CGPoint touchPoint  = [gesture locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:touchPoint];
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    TaskDetails *taskDetails = [self.taskList objectAtIndex:indexPath.row];
 
-    if (cell.backgroundColor == [UIColor clearColor]) {
-        cell.backgroundColor = [UIColor redColor];
+    if (taskDetails.taskColor == [UIColor blackColor]) {
+        taskDetails.taskColor = [UIColor redColor];
     }
-    else if (cell.backgroundColor == [UIColor redColor])
+    else if (taskDetails.taskColor == [UIColor redColor])
     {
-        cell.backgroundColor = [UIColor yellowColor];
+        taskDetails.taskColor = [UIColor yellowColor];
     }
-    else if (cell.backgroundColor == [UIColor yellowColor])
+    else if (taskDetails.taskColor == [UIColor yellowColor])
     {
-        cell.backgroundColor = [UIColor greenColor];
+        taskDetails.taskColor = [UIColor greenColor];
     }
     else
     {
-        cell.backgroundColor = [UIColor clearColor];
+        taskDetails.taskColor = [UIColor blackColor];
     }
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table View Methods
@@ -95,7 +114,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tasksCell"];
-    cell.textLabel.text = [self.taskList objectAtIndex:indexPath.row];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tasksCell"];
+    }
+    TaskDetails *taskDetails = [self.taskList objectAtIndex:indexPath.row];
+    cell.textLabel.attributedText = taskDetails.taskText;
+    cell.textLabel.textColor = taskDetails.taskColor;
     return cell;
 }
 
@@ -132,33 +156,30 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    TaskDetails *taskDetails = [self.taskList objectAtIndex:indexPath.row];
+    NSRange range = NSMakeRange(0, taskDetails.taskText.length);
     if (!self.editModeStatus)
     {
-        //Make text strikethrough
-        NSDictionary *textAttribute = [[NSDictionary alloc]init];
-
-        if (self.isStrikethrough)
+        if (taskDetails.isStrikethrough)
         {
             //Make text not strikethrough
-            textAttribute = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleNone]};
-            NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:cell.textLabel.text attributes:textAttribute];
-            cell.textLabel.attributedText = attributedString;
+            [taskDetails.taskText setAttributes:self.normalText range:range];
         }
         else
         {
             //Make text strikethrough
-            textAttribute = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]};
-            NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:cell.textLabel.text attributes:textAttribute];
-            cell.textLabel.attributedText = attributedString;
+            [taskDetails.taskText setAttributes:self.strikethroughText range:range];
+
         }
-        self.isStrikethrough = !self.isStrikethrough;
+        taskDetails.isStrikethrough = !taskDetails.isStrikethrough;
+        [self.tableView reloadData];
+
     }
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSString *stringToMove = self.taskList[sourceIndexPath.row];
+    NSAttributedString *stringToMove = self.taskList[sourceIndexPath.row];
     [self.taskList removeObjectAtIndex:sourceIndexPath.row];
     [self.taskList insertObject:stringToMove atIndex:destinationIndexPath.row];
 }

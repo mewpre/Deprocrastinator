@@ -14,6 +14,7 @@
 		18E4A2531A6479E1003BF7F8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18E4A2521A6479E1003BF7F8 /* Images.xcassets */; };
 		18E4A2561A6479E1003BF7F8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E4A2541A6479E1003BF7F8 /* LaunchScreen.xib */; };
 		18E4A2621A6479E2003BF7F8 /* DeprocrastinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E4A2611A6479E2003BF7F8 /* DeprocrastinatorTests.m */; };
+		6009510A1A658D0A001FA4C1 /* TaskDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 600951091A658D0A001FA4C1 /* TaskDetails.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		18E4A25B1A6479E2003BF7F8 /* DeprocrastinatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeprocrastinatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18E4A2601A6479E2003BF7F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18E4A2611A6479E2003BF7F8 /* DeprocrastinatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeprocrastinatorTests.m; sourceTree = "<group>"; };
+		600951081A658D0A001FA4C1 /* TaskDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetails.h; sourceTree = "<group>"; };
+		600951091A658D0A001FA4C1 /* TaskDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetails.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +88,8 @@
 				18E4A24A1A6479E1003BF7F8 /* AppDelegate.m */,
 				18E4A24C1A6479E1003BF7F8 /* RootViewController.h */,
 				18E4A24D1A6479E1003BF7F8 /* RootViewController.m */,
+				600951081A658D0A001FA4C1 /* TaskDetails.h */,
+				600951091A658D0A001FA4C1 /* TaskDetails.m */,
 				18E4A24F1A6479E1003BF7F8 /* Main.storyboard */,
 				18E4A2521A6479E1003BF7F8 /* Images.xcassets */,
 				18E4A2541A6479E1003BF7F8 /* LaunchScreen.xib */,
@@ -220,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18E4A24E1A6479E1003BF7F8 /* RootViewController.m in Sources */,
+				6009510A1A658D0A001FA4C1 /* TaskDetails.m in Sources */,
 				18E4A24B1A6479E1003BF7F8 /* AppDelegate.m in Sources */,
 				18E4A2481A6479E1003BF7F8 /* main.m in Sources */,
 			);
