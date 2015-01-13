@@ -11,11 +11,13 @@
 @interface RootViewController () <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *taskTextField;
-@property NSMutableArray *taskList;
-@property BOOL editModeStatus;
 @property (strong, nonatomic) IBOutlet UIButton *addButton;
+
+@property NSMutableArray *taskList;
 @property NSIndexPath *deleteCellIndexPath;
+
 @property BOOL isStrikethrough;
+@property BOOL editModeStatus;
 
 @end
 
@@ -123,10 +125,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        UIAlertView *deleteWarning = [[UIAlertView alloc] initWithTitle:@"Delete Warning:" message:@"Do you really want to delete this task?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
-        // optional - add more buttons:
-        [deleteWarning addButtonWithTitle:@"Delete"];
-        [deleteWarning show];
+        [self deleteWarningAlertView];
         self.deleteCellIndexPath = indexPath;
     }
 }
@@ -162,6 +161,15 @@
     NSString *stringToMove = self.taskList[sourceIndexPath.row];
     [self.taskList removeObjectAtIndex:sourceIndexPath.row];
     [self.taskList insertObject:stringToMove atIndex:destinationIndexPath.row];
+}
+
+#pragma mark - Alert View Methods
+- (void)deleteWarningAlertView
+{
+    UIAlertView *deleteWarning = [[UIAlertView alloc] initWithTitle:@"Delete Warning:" message:@"Do you really want to delete this task?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    // optional - add more buttons:
+    [deleteWarning addButtonWithTitle:@"Delete"];
+    [deleteWarning show];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
