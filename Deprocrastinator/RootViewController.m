@@ -29,6 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //Set attribute dictionaries to implement strikethrough
     self.normalText= @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleNone]};
     self.strikethroughText = @{ NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]};
 
@@ -54,7 +55,7 @@
 
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)sender
 {
-    //if not in edit mode, go into edit mode
+    //If not in edit mode, go into edit mode
     if (!self.editModeStatus)
     {
         [self.tableView setEditing:YES animated:YES];
@@ -125,16 +126,18 @@
     return @[deleteAction];
 } */
 
+//Method to enable built-in edit functionality
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
 
+//Method to enable built-in move functionality
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
-
+//Built-in Method for clicking on delete button
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
@@ -148,6 +151,7 @@
 {
     TaskDetails *taskDetails = [self.taskList objectAtIndex:indexPath.row];
     NSRange range = NSMakeRange(0, taskDetails.taskText.length);
+    //Can't do strikethroughs in edit mode
     if (!self.editModeStatus)
     {
         if (taskDetails.isStrikethrough)
@@ -169,16 +173,19 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSAttributedString *stringToMove = self.taskList[sourceIndexPath.row];
+    //Get taskDetails from row being moved
+    TaskDetails *taskDetails = self.taskList[sourceIndexPath.row];
+    //Row is deleted from the taskList array
     [self.taskList removeObjectAtIndex:sourceIndexPath.row];
-    [self.taskList insertObject:stringToMove atIndex:destinationIndexPath.row];
+    //Row is added to new location in taskList array
+    [self.taskList insertObject:taskDetails atIndex:destinationIndexPath.row];
 }
 
 #pragma mark - Alert View Methods
 - (void)deleteWarningAlertView
 {
     UIAlertView *deleteWarning = [[UIAlertView alloc] initWithTitle:@"Delete Warning:" message:@"Do you really want to delete this task?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
-    // optional - add more buttons:
+    // Optional - add more buttons:
     [deleteWarning addButtonWithTitle:@"Delete"];
     [deleteWarning show];
 }
@@ -187,6 +194,7 @@
     if (buttonIndex == 1)
     {
         [self.tableView beginUpdates];
+        //must put deleteRowsAtIndexPaths between table view beginUpdates and endUpdates methods
         [self.tableView deleteRowsAtIndexPaths:@[self.deleteCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.taskList removeObjectAtIndex:self.deleteCellIndexPath.row];
         [self.tableView reloadData];
@@ -195,16 +203,16 @@
 }
 
 #pragma mark - Initialize Task List
-
+//Helper method - sets up starting task list
 - (void)initializeStartingTaskList
 {
     NSMutableAttributedString *task1 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
     TaskDetails *task1Details = [[TaskDetails alloc] initWithProperties:task1 textColor:[UIColor blackColor] isStrikethrough:NO];
-    NSMutableAttributedString *task2 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    NSMutableAttributedString *task2 = [[NSMutableAttributedString alloc] initWithString:@"Task2" attributes:self.normalText];
     TaskDetails *task2Details = [[TaskDetails alloc] initWithProperties:task2 textColor:[UIColor blackColor] isStrikethrough:NO];
-    NSMutableAttributedString *task3 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    NSMutableAttributedString *task3 = [[NSMutableAttributedString alloc] initWithString:@"Task3" attributes:self.normalText];
     TaskDetails *task3Details = [[TaskDetails alloc] initWithProperties:task3 textColor:[UIColor blackColor] isStrikethrough:NO];
-    NSMutableAttributedString *task4 = [[NSMutableAttributedString alloc] initWithString:@"Task1" attributes:self.normalText];
+    NSMutableAttributedString *task4 = [[NSMutableAttributedString alloc] initWithString:@"Task4" attributes:self.normalText];
     TaskDetails *task4Details = [[TaskDetails alloc] initWithProperties:task4 textColor:[UIColor blackColor] isStrikethrough:NO];
     self.taskList = [[NSMutableArray alloc]initWithObjects:task1Details, task2Details, task3Details, task4Details, nil];
 }
